@@ -1,16 +1,26 @@
+#!/bin/bash
+
 export USE_CCACHE=1
 
 export CACHE_DIR=~/.ccache
 
 
-export KBUILD_BUILD_USER=Legion
-export KBUILD_BUILD_HOST=N7
+export KBUILD_BUILD_USER=$USER
+export KBUILD_BUILD_HOST=BuildHost
 
 export ARCH=arm64
-export CROSS_COMPILE=aarch64-linaro-linux-android-
-export PATH=/home/legion/Android/kernel/gcc-prebuilts/bin:$PATH
+export CROSS_COMPILE=aarch64-linux-gnu-
+export PATH=~/bin/gcc-linaro-6.5.0-2018.12-x86_64_aarch64-linux-gnu/bin/:~/.ccache:/var/lib/ccache:$PATH
 
+if [ -f $PWD/.config ];then
+    echo " - .config Found - "
+    echo " - Cleaning - "
+    make clean
+    make mrproper
+fi
 
-make jolla-kernel_h930_defconfig
+make blaze_kernel_defconfig
+
+#make menuconfig
 
 make -j8
